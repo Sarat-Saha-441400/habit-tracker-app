@@ -1,47 +1,43 @@
-// client/src/services/apiService.js
 import axios from 'axios';
 
-// 1. Create a configured Axios instance
+// 1. Define the base URL for your backend server
+// Assuming your backend is running on http://localhost:5000
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000/api';
+
 const api = axios.create({
-    // In a React setup using create-react-app or Vite, this baseURL 
-    // assumes you have configured a proxy in package.json to route requests 
-    // from /api to your backend (e.g., http://localhost:5000/api).
-    baseURL: '/api', 
+    baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
-// 2. Request Interceptor: Attach Authorization Header
-// This runs before every request is sent.
+// 2. Add an interceptor to inject the auth token into every request
+// This ensures that authenticated endpoints receive the JWT token.
 api.interceptors.request.use(
     (config) => {
-        // Get the token from local storage
+        // Retrieve the token from localStorage
         const token = localStorage.getItem('token');
         
-        // If a token exists, add it to the Authorization header in the 'Bearer' format
+        // If a token exists, set the Authorization header
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-        
         return config;
     },
     (error) => {
-        // Handle request errors
         return Promise.reject(error);
     }
 );
 
-// 3. Response Interceptor (Optional but Recommended)
-// This can be used to handle global errors (e.g., 401 Unauthorized globally)
+// 3. Optional: Add a response interceptor to handle token expiration/401 errors
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // Check for 401 Unauthorized response globally
+        // Example: If token is expired or unauthorized
         if (error.response && error.response.status === 401) {
-            console.error('Unauthorized request. Token may be expired or invalid.');
-            // Optional: You could dispatch a global logout action here 
-            // if the 401 response is due to an expired token.
+            // This is where you might automatically call the logout function
+            // To avoid circular dependencies, it's often better to handle 401
+            // errors in the component or context that receives the error.
         }
         return Promise.reject(error);
     }

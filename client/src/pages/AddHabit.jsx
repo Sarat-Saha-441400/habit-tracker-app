@@ -1,88 +1,88 @@
-// client/src/pages/AddHabit.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useHabits } from '../contexts/HabitContext';
-import useForm from '../hooks/useForm'; // Assumed custom hook
+import AddHabitForm from '../components/habits/AddHabitFrom'
+import { toast } from 'react-toastify';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const AddHabit = () => {
-    const navigate = useNavigate();
     const { addHabit } = useHabits();
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { values, handleChange } = useForm({
-        name: '',
-        description: '',
-        frequency: 'daily',
-        isPublic: false,
-    });
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError(null);
-        setIsLoading(true);
+    /**
+     * Handles the form submission logic from AddHabitForm.
+     * Prepares the final payload and calls the global habit creation action.
+     * @param {Object} formData - Data collected from the form inputs.
+     */
+    const handleCreateHabit = async (formData) => {
+        setIsSubmitting(true);
 
         try {
-            await addHabit(values);
-            navigate('/my-habits');
+            // Note on Image Upload: In a real app, logic for uploading imageFile 
+            // to a service like ImgBB and getting the public URL would happen here.
+            
+            const habitPayload = {
+                name: formData.name,
+                description: formData.description,
+                category: formData.category, 
+                isPublic: formData.isPublic,
+                reminderTime: formData.reminderTime,
+                // Using a placeholder URL until actual image upload logic is implemented
+                imageUrl: formData.imageFile ? 'placeholder-image-url.jpg' : null, 
+                // The server uses the JWT token to identify the user ID
+            };
+            
+            // Call context action to save to DB
+            await addHabit(habitPayload);
+            
+            // Success: Toast is handled within HabitContext.js, but we navigate here.
+            navigate('/habits'); 
+            
         } catch (err) {
-            setError(err);
+            // Error: Toast is handled within HabitContext.js or re-thrown here.
+            console.error('Create habit error:', err);
         } finally {
-            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
 
     return (
-        <div style={{ maxWidth: '600px', margin: '30px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-            <h2>Create New Habit 📝</h2>
-            {error && <p style={{ color: 'var(--danger-color)' }}>Error: {error}</p>}
-            
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-                <input 
-                    type="text" 
-                    name="name" 
-                    placeholder="Habit Name (e.g., Read 10 Pages)" 
-                    value={values.name} 
-                    onChange={handleChange} 
-                    required 
-                    disabled={isLoading}
-                    style={inputStyle}
-                />
-                <textarea 
-                    name="description" 
-                    placeholder="Description (Optional)" 
-                    value={values.description} 
-                    onChange={handleChange} 
-                    rows="3"
-                    disabled={isLoading}
-                    style={inputStyle}
-                />
-                <select name="frequency" value={values.frequency} onChange={handleChange} disabled={isLoading} style={inputStyle}>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="custom">Custom</option>
-                </select>
+        <div className="p-4 md:p-8 max-w-2xl mx-auto">
+            {/* Link back to the My Habits Dashboard */}
+            <Link to="/habits" style={linkStyle}>
+                <FaArrowLeft style={{ marginRight: '8px' }} /> Back to My Habits
+            </Link>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <input 
-                        type="checkbox" 
-                        name="isPublic" 
-                        checked={values.isPublic} 
-                        onChange={handleChange}
-                        disabled={isLoading}
-                    />
-                    Make Public (Allow others to see this habit for inspiration)
-                </label>
+            <div style={cardStyle}>
+                <h1 style={{ fontSize: '2em', marginBottom: '10px', color: 'var(--primary-color)' }}>Define Your New Goal</h1>
+                <p style={{ color: '#6b7280', marginBottom: '20px' }}>Every journey starts with a single, clear step.</p>
 
-                <button type="submit" disabled={isLoading} style={buttonStyle}>
-                    {isLoading ? 'Adding Habit...' : 'Add Habit'}
-                </button>
-            </form>
+                <AddHabitForm 
+                    onSubmit={handleCreateHabit} 
+                    isSubmitting={isSubmitting} 
+                />
+            </div>
         </div>
     );
 };
 
-const inputStyle = { padding: '10px', border: '1px solid #ddd', borderRadius: '4px' };
-const buttonStyle = { padding: '12px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' };
+// Inline Styles for consistency
+const linkStyle = { 
+    display: 'flex', 
+    alignItems: 'center', 
+    marginBottom: '20px', 
+    color: 'var(--primary-color)',
+    fontWeight: '500',
+    fontSize: '1em',
+};
+
+const cardStyle = {
+    backgroundColor: 'white', 
+    padding: '30px', 
+    borderRadius: '12px', 
+    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+    border: '1px solid #e5e7eb',
+};
 
 export default AddHabit;

@@ -1,38 +1,74 @@
 import React, { useEffect } from 'react';
 import { useHabits } from '../contexts/HabitContext.jsx';
-import useHabitActions from '../hooks/useHabitActions.js'; // Assuming this hook exists
+import useHabitActions from '../hooks/useHabitActions.js';
 import HabitTable from '../components/habits/HabitTable.jsx'; 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { FaPlus } from 'react-icons/fa'; // Ensure FaPlus is imported
 
-const MyHabits = () => {
-    // This component must be wrapped in <HabitProvider> in App.jsx
+const MyHabits = () => { // <--- Component Definition Starts Here
+    // State and data fetching from global context
     const { habits, loading, error, fetchHabits } = useHabits();
     
-    // Note: useHabitActions uses toggleComplete, deleteHabit, updateHabit from useHabits
-    const { handleToggleComplete, handleDeleteHabit } = useHabitActions(); 
+    // Action handlers for specific habit mutations (delete/toggle complete)
+    const { 
+        handleToggleComplete, 
+        handleDeleteHabit, 
+        actionError, 
+        actionLoading 
+    } = useHabitActions(); 
+    
+    const navigate = useNavigate();
 
+    // Fetch user habits when the component mounts
     useEffect(() => {
-        // Fetch habits only after the component mounts
+        // We only call fetchHabits here. The logic inside HabitContext
+        // will check if the user is authenticated before making the API call.
         fetchHabits(); 
-    }, []);
+    }, [fetchHabits]);
 
-    // Placeholder handlers for table component
-    const handleEdit = (id) => { console.log(`Editing habit: ${id}`); };
-    const handleDelete = (id) => { handleDeleteHabit(id); };
+    // Show toast notification if an action (delete/toggle) fails
+    useEffect(() => {
+        if (actionError) {
+            toast.error(`Action Failed: ${actionError}`);
+        }
+    }, [actionError]);
 
-    if (loading) return <h2>Loading Habits...</h2>;
-    if (error) return <h2 style={{ color: 'var(--danger-color)' }}>Error: {error}</h2>;
+    // Handler for the Edit button (conceptual: would open UpdateHabitModal)
+    const handleEdit = (id) => { 
+        // Navigate to the edit page/route
+        navigate(`/habits/${id}/edit`); 
+    };
+
+    // Handler for Delete button
+    // NOTE: useHabitActions handles the actual deletion and confirmation.
+    const handleDelete = async (id) => { 
+        await handleDeleteHabit(id);
+        // Note: The success toast is triggered here after the action hook finishes
+        if (!actionError) {
+            toast.success("Habit deleted successfully.");
+        }
+    };
+
+    if (loading) return <h2 style={{ textAlign: 'center', padding: '20px' }}>Loading Habits...</h2>;
+    if (error) return <h2 style={{ color: '#ef4444', textAlign: 'center' }}>Error: {error}</h2>;
 
     return (
-        <div>
-            <h1>My Daily Habits 🎯</h1>
+        <div className="my-habits-page container">
+            <h1 style={{fontSize: '2.5em', marginBottom: '20px', color: 'var(--primary-color)'}}>My Daily Habits 🎯</h1>
+            
+            <Link 
+                to="/habits/add" 
+                className="btn-primary"
+                style={createHabitLinkStyle} // Apply the locally defined style
+            >
+                <FaPlus style={{ marginRight: '5px' }} /> Create New Habit
+            </Link>
             
             {habits.length === 0 ? (
                 <div style={emptyStateStyle}>
                     <p>You haven't set up any habits yet. Time to start building!</p>
-                    <Link to="/add-habit" style={linkStyle}>
-                        Create Your First Habit Now
-                    </Link>
+                    <p style={{ marginTop: '10px' }}>Click "Create New Habit" above to begin your consistency journey.</p>
                 </div>
             ) : (
                 <HabitTable 
@@ -40,13 +76,26 @@ const MyHabits = () => {
                     onToggleComplete={handleToggleComplete}
                     onDelete={handleDelete}
                     onEdit={handleEdit}
+                    isActionLoading={actionLoading}
                 />
             )}
         </div>
     );
+}; // <--- Component Definition Ends Here (The Fix is ensuring this is defined first)
+
+// --- Local Styles Defined After Component ---
+const emptyStateStyle = { 
+    textAlign: 'center', 
+    padding: '40px', 
+    border: '2px dashed #ccc', 
+    marginTop: '20px', 
+    borderRadius: '8px',
+    backgroundColor: 'white'
+};
+const createHabitLinkStyle = { 
+    display: 'inline-flex', // Ensure icon and text align well
+    marginBottom: '20px', 
+    // The rest of the styling comes from .btn-primary in index.css
 };
 
-const emptyStateStyle = { textAlign: 'center', padding: '40px', border: '2px dashed var(--primary-color)', marginTop: '20px', borderRadius: '8px' };
-const linkStyle = { display: 'inline-block', marginTop: '15px', color: 'var(--primary-color)', fontWeight: 'bold' };
-
-export default MyHabits;
+export default MyHabits; // <--- Export Statement Works Here

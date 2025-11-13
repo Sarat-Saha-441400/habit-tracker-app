@@ -1,0 +1,222 @@
+/* Variables for easy theme switching */
+:root {
+    --primary-color: #4f46e5; /* Indigo-600 */
+    --secondary-color: #f3f4f6; /* Gray-100 */
+    --text-color: #1f2937; /* Gray-900 */
+    --background-color: #ffffff;
+    --border-radius: 0.5rem;
+    --transition-speed: 0.2s;
+}
+
+/* 1. Base Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--background-color);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+}
+
+/* 2. Logo/Branding */
+.header__logo a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    transition: color var(--transition-speed);
+}
+
+.header__logo a:hover {
+    color: #3730a3; /* Deeper indigo on hover */
+}
+
+/* 3. Primary Navigation */
+.header__nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header__nav li {
+    margin: 0 0.75rem;
+}
+
+.header__nav a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 0.5rem 0.25rem;
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-speed), border-bottom var(--transition-speed);
+    border-bottom: 2px solid transparent;
+}
+
+.header__nav a:hover {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* 4. Action Buttons (Login/Signup) */
+.header__actions {
+    display: flex;
+    align-items: center;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+    background-color: #3730a3; /* Deeper indigo */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color);
+}
+
+/* 5. User Profile Dropdown */
+.user-menu-container {
+    position: relative;
+    background-color: rgb(101, 33, 190);
+}
+
+.user-profile-button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    color: var(--background-color); /* Button text color */
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 5px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    margin-top: 0.5rem;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+    padding: 0.5rem 0;
+    border: 1px solid var(--secondary-color);
+    animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-info {
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+
+.user-name-display {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0;
+}
+
+.user-email-display {
+    font-size: 0.875rem;
+    color: #6b7280; /* Gray-500 */
+    margin-top: 0.25rem;
+}
+
+.dropdown-menu hr {
+    border: none;
+    border-top: 1px solid var(--secondary-color);
+    margin: 0.5rem 0;
+}
+
+.dropdown-item {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    color: var(--text-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: background-color var(--transition-speed);
+}
+
+.dropdown-item:hover {
+    background-color: var(--secondary-color);
+}
+
+/* 6. Responsive Adjustments (Mobile) */
+@media (max-width: 768px) {
+    .header {
+        flex-wrap: wrap;
+        padding: 0.5rem 1rem;
+    }
+
+    .header__logo {
+        flex-grow: 1;
+        order: 1;
+    }
+
+    .header__actions {
+        order: 2;
+    }
+    
+    /* Hide main nav on mobile and rely on a mobile menu (which you may need to implement later) */
+    .header__nav {
+        display: none; 
+    }
+    
+    /* Center the dropdown under the user button */
+    .dropdown-menu {
+        right: 0;
+        left: auto; 
+        width: 200px;
+    }
+}

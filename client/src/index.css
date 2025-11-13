@@ -1,35 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
-/* The @import rule MUST be the very first line */
+/* --- Typography & Global Font --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-:root {
-  --primary-color: #3f51b5; /* Indigo */
-  --accent-color: #ffc107; /* Amber */
-  --success-color: #4caf50;
-  --danger-color: #f44336;
-  --bg-color: #f4f4f4;
-  --text-color: #333;
+/* --- Global Reset & Box Model --- */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Remove default margin and padding */
+body, h1, h2, h3, h4, p, figure, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
 }
+
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color, #1f2937); /* Uses color variable from Header.css fallback */
+    background-color: var(--secondary-color, #f3f4f6); /* Light gray background */
+    line-height: 1.5;
+    min-height: 100vh; /* Ensure body covers full viewport height */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
+/* Anchor styling reset */
 a {
-  text-decoration: none;
-  color: var(--primary-color);
+    color: inherit;
+    text-decoration: none;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+/* --- Layout Stability --- */
+
+/* Root element for React app */
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Main Content Wrapper (Used to push footer down and contain content) */
+.main-content-wrapper {
+    flex-grow: 1; /* Allows the content area to fill available space */
+    width: 100%;
+    max-width: 1280px; /* Max width for desktop viewing */
+    margin: 0 auto; /* Center the content */
+    padding: 1.5rem;
+    padding-top: 5rem; /* Padding to account for the sticky header height */
+}
+
+/* Styles to clean up list items */
+ul {
+    list-style: none;
 }
