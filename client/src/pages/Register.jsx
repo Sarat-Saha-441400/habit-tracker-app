@@ -1,3 +1,4 @@
+// Register.jsx - UPDATED
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import RegisterForm from '../components/auth/RegisterForm.jsx';
@@ -7,39 +8,37 @@ import '../styles/AuthStyles.css';
 
 const Register = () => {
     const navigate = useNavigate();
-    const { register, loginWithGoogle } = useAuth();
+    const { register } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleFormSubmit = async (formData) => {
         setIsSubmitting(true);
         try {
-            await register(formData.username, formData.email, formData.password);
-            toast.success('Registration successful! Redirecting to your habits...');
+            // FIX: Pass the whole object, not individual strings
+            await register(formData); 
+            
+            toast.success('Registration successful!');
             navigate('/habits');
         } catch (err) {
-            const errorMessage = String(err);
-            toast.error(errorMessage);
+            // Error is already toasted in the AuthContext, but you can log it here
+            console.error("Registration failed:", err);
         } finally {
             setIsSubmitting(false);
         }
     };
     
-    const handleGoogleLogin = async () => {
-        // Conceptual Google Login
+    const handleGoogleLogin = () => {
         toast.info("Google login feature is conceptual.");
     };
-
 
     return (
         <div className="register-page">
             <div className="register-card">
                 <h2 className="register-title">Create Your Account</h2>
-                
                 <RegisterForm 
                     onSubmit={handleFormSubmit} 
                     isSubmitting={isSubmitting} 
                 />
-                
                 <button
                     type="button"
                     className="submit-button"
@@ -48,7 +47,6 @@ const Register = () => {
                 >
                     Sign up with Google
                 </button>
-
                 <p className="login-link-container">
                     Already have an account? 
                     <Link to="/login" className="login-link">Login here</Link>

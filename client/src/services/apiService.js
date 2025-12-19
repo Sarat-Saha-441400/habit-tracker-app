@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // 1. Define the base URL for your backend server
 // Assuming your backend is running on http://localhost:5000
+// const API_BASE_URL = 'http://localhost:5000/api';
 const API_BASE_URL = 'https://habit-tracker-sarat1.vercel.app/api';
 
 const api = axios.create({
