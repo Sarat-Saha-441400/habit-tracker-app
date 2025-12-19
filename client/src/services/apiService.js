@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://habit-tracker-sarat1.vercel.app/api';
+// CHANGE: Remove the full URL to use a relative path
+const API_BASE_URL = '/api'; 
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -12,11 +13,9 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        // Only add header if token actually exists and is not a string "null"
         if (token && token !== 'null' && token !== 'undefined') {
             config.headers.Authorization = `Bearer ${token}`;
         } else {
-            // Clean up header if no token is found
             delete config.headers.Authorization;
         }
         return config;
