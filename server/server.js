@@ -7,7 +7,7 @@ connectDB();
 
 const app = express();
 
-// Middlewares - CORS REMOVED COMPLETELY
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
