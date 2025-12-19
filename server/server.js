@@ -9,10 +9,9 @@ connectDB();
 const app = express();
 
 // Simplest CORS setup for Express
-app.use(cors({
-    origin: 'https://habit-tracker-project-gold.vercel.app',
-    credentials: true
-}));
+app.options('*', cors()); 
+
+app.use(express.json());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
