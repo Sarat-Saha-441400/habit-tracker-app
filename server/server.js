@@ -14,9 +14,10 @@ const app = express();
 // Note: origin: true allows any origin that sends a request. 
 // This is safer for initial deployment testing than hardcoding localhost.
 app.use(cors({
-    origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: ["http://localhost:5173", "https://your-frontend-domain.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
