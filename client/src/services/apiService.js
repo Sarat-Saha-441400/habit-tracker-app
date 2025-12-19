@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // CHANGE: Remove the full URL to use a relative path
-const API_BASE_URL = 'https://habit-tracker-sarat1.vercel.app//api'; 
+const API_BASE_URL = 'https://habit-tracker-app-alpha-liard.vercel.app/api'; 
 
 const api = axios.create({
     baseURL: API_BASE_URL,
