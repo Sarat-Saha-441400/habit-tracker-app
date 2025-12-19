@@ -6,6 +6,7 @@ const API_BASE_URL = 'https://habit-tracker-sarat1.vercel.app/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
+    withCredentials: true, // Include cookies in requests if needed
     headers: {
         'Content-Type': 'application/json',
     },
