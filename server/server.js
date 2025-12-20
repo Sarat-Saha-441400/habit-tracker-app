@@ -23,7 +23,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/habits', require('./routes/habitRoutes'));
 
 // Root route
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
     res.send('API is running on the same domain as the frontend...');
 });
 
